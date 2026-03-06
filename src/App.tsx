@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  BookOpen, 
-  FileText, 
-  Music, 
-  Video, 
-  Search, 
-  LogOut, 
-  Plus, 
-  Trash2, 
-  Download, 
+import {
+  BookOpen,
+  FileText,
+  Music,
+  Video,
+  Search,
+  LogOut,
+  Plus,
+  Trash2,
+  Download,
   ExternalLink,
   ChevronRight,
   LayoutDashboard,
   Menu,
   X,
-  GraduationCap
+  GraduationCap,
+  Sparkles
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Course, Material, MaterialType } from './types';
@@ -88,10 +89,10 @@ export default function App() {
     setIsAdmin(false);
   };
 
-  const filteredMaterials = materials.filter(m => 
+  const filteredMaterials = materials.filter(m =>
     (activeTab === 'all' || m.type === activeTab) &&
-    (m.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-     m.description.toLowerCase().includes(searchQuery.toLowerCase()))
+    (m.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.description.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (
@@ -99,8 +100,8 @@ export default function App() {
       {/* Navigation */}
       <nav className="sticky top-0 z-50 glass border-b border-white/10 px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div 
-            className="flex items-center gap-2 cursor-pointer" 
+          <div
+            className="flex items-center gap-2 cursor-pointer"
             onClick={() => { setSelectedCourse(null); setActiveTab('all'); }}
           >
             <div className="w-10 h-10 bg-sky rounded-xl flex items-center justify-center shadow-lg shadow-sky/20">
@@ -115,9 +116,9 @@ export default function App() {
           <div className="hidden md:flex items-center gap-6">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <input 
-                type="text" 
-                placeholder="Search resources..." 
+              <input
+                type="text"
+                placeholder="Search resources..."
                 className="input-field pl-10 w-64 text-sm"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -150,7 +151,7 @@ export default function App() {
       <main className="flex-1 max-w-7xl mx-auto w-full p-6">
         <AnimatePresence mode="wait">
           {!selectedCourse ? (
-            <motion.div 
+            <motion.div
               key="home"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -162,21 +163,21 @@ export default function App() {
                   Empowering <span className="text-sky">Academic</span> Excellence
                 </h2>
                 <p className="text-slate-400 max-w-2xl mx-auto text-lg">
-                  Access a comprehensive library of lectures, notes, and practical materials 
+                  Access a comprehensive library of lectures, notes, and practical materials
                   curated by educators for students. No login required for browsing.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {courses.map((course) => (
-                  <CourseCard 
-                    key={course.id} 
-                    course={course} 
-                    onClick={() => setSelectedCourse(course)} 
+                  <CourseCard
+                    key={course.id}
+                    course={course}
+                    onClick={() => setSelectedCourse(course)}
                   />
                 ))}
                 {isAdmin && (
-                  <button 
+                  <button
                     onClick={() => setShowLogin(true)}
                     className="border-2 border-dashed border-white/10 rounded-2xl p-8 flex flex-col items-center justify-center gap-4 hover:border-sky/50 hover:bg-sky/5 transition-all group"
                   >
@@ -189,7 +190,7 @@ export default function App() {
               </div>
             </motion.div>
           ) : (
-            <motion.div 
+            <motion.div
               key="course-detail"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -198,7 +199,7 @@ export default function App() {
             >
               <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/10 pb-8">
                 <div className="space-y-2">
-                  <button 
+                  <button
                     onClick={() => setSelectedCourse(null)}
                     className="text-sky text-sm font-medium flex items-center gap-1 hover:underline"
                   >
@@ -209,7 +210,7 @@ export default function App() {
                   <p className="text-slate-400 max-w-3xl">{selectedCourse.description}</p>
                 </div>
                 {isAdmin && (
-                  <button 
+                  <button
                     onClick={() => setShowLogin(true)}
                     className="btn-primary flex items-center gap-2"
                   >
@@ -230,13 +231,13 @@ export default function App() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {filteredMaterials.map((material) => (
-                  <MaterialCard 
-                    key={material.id} 
-                    material={material} 
+                  <MaterialCard
+                    key={material.id}
+                    material={material}
                     isAdmin={isAdmin}
                     onDelete={async () => {
                       if (confirm('Delete this material?')) {
-                        await fetch(`/api/materials/${material.id}`, { 
+                        await fetch(`/api/materials/${material.id}`, {
                           method: 'DELETE',
                           headers: { 'Authorization': `Bearer ${token}` }
                         });
@@ -261,10 +262,10 @@ export default function App() {
         {showLogin && (
           <Modal onClose={() => setShowLogin(false)}>
             {isAdmin ? (
-              <AdminPanel 
-                token={token!} 
-                courses={courses} 
-                onRefresh={() => { fetchCourses(); if (selectedCourse) fetchMaterials(selectedCourse.id); }} 
+              <AdminPanel
+                token={token!}
+                courses={courses}
+                onRefresh={() => { fetchCourses(); if (selectedCourse) fetchMaterials(selectedCourse.id); }}
               />
             ) : (
               <LoginForm onSubmit={handleLogin} />
@@ -293,7 +294,7 @@ export default function App() {
 
 const CourseCard: React.FC<{ course: Course, onClick: () => void }> = ({ course, onClick }) => {
   return (
-    <motion.div 
+    <motion.div
       whileHover={{ y: -5 }}
       onClick={onClick}
       className="glass rounded-2xl p-6 cursor-pointer group hover:border-sky/30 transition-all"
@@ -314,6 +315,9 @@ const CourseCard: React.FC<{ course: Course, onClick: () => void }> = ({ course,
 }
 
 const MaterialCard: React.FC<{ material: Material, isAdmin: boolean, onDelete: () => void }> = ({ material, isAdmin, onDelete }) => {
+  const [summary, setSummary] = useState<string | null>(null);
+  const [isSummarizing, setIsSummarizing] = useState(false);
+
   const Icon = {
     pdf: FileText,
     audio: Music,
@@ -322,56 +326,108 @@ const MaterialCard: React.FC<{ material: Material, isAdmin: boolean, onDelete: (
     note: FileText
   }[material.type];
 
+  const handleSummarize = async () => {
+    setIsSummarizing(true);
+    try {
+      const res = await fetch('/api/ai/summarize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: material.description })
+      });
+      const data = await res.json();
+      setSummary(data.summary);
+    } catch (e) {
+      alert('Error connecting to AI');
+    } finally {
+      setIsSummarizing(false);
+    }
+  };
+
   const isExternal = material.url.startsWith('http');
 
   return (
-    <div className="glass rounded-xl p-4 flex gap-4 items-start group">
-      <div className={cn(
-        "w-12 h-12 rounded-lg flex items-center justify-center shrink-0",
-        material.type === 'pdf' ? "bg-red-500/10 text-red-400" :
-        material.type === 'video' ? "bg-purple-500/10 text-purple-400" :
-        material.type === 'audio' ? "bg-emerald-500/10 text-emerald-400" :
-        "bg-sky/10 text-sky"
-      )}>
-        <Icon className="w-6 h-6" />
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex justify-between items-start">
-          <h4 className="text-white font-medium truncate">{material.title}</h4>
-          <div className="flex items-center gap-2">
-            {isAdmin && (
-              <button onClick={onDelete} className="text-slate-500 hover:text-red-400 transition-colors">
-                <Trash2 className="w-4 h-4" />
-              </button>
-            )}
-            <a 
-              href={material.url} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-sky hover:text-white transition-colors"
-            >
-              {isExternal ? <ExternalLink className="w-4 h-4" /> : <Download className="w-4 h-4" />}
-            </a>
-          </div>
+    <div className="glass rounded-xl p-4 space-y-4 group">
+      <div className="flex gap-4 items-start">
+        <div className={cn(
+          "w-12 h-12 rounded-lg flex items-center justify-center shrink-0",
+          material.type === 'pdf' ? "bg-red-500/10 text-red-400" :
+            material.type === 'video' ? "bg-purple-500/10 text-purple-400" :
+              material.type === 'audio' ? "bg-emerald-500/10 text-emerald-400" :
+                "bg-sky/10 text-sky"
+        )}>
+          <Icon className="w-6 h-6" />
         </div>
-        <p className="text-slate-400 text-xs mt-1 line-clamp-2">{material.description}</p>
-        
-        {material.type === 'audio' && (
-          <audio controls className="w-full h-8 mt-3 opacity-60 hover:opacity-100 transition-opacity">
-            <source src={material.url} type="audio/mpeg" />
-          </audio>
-        )}
-
-        {material.type === 'video' && isExternal && (
-          <div className="mt-3 aspect-video rounded-lg overflow-hidden bg-black/20">
-            <iframe 
-              src={material.url.replace('watch?v=', 'embed/')} 
-              className="w-full h-full border-0"
-              allowFullScreen
-            />
+        <div className="flex-1 min-w-0">
+          <div className="flex justify-between items-start">
+            <h4 className="text-white font-medium truncate">{material.title}</h4>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleSummarize}
+                disabled={isSummarizing || !material.description}
+                className="text-gold/60 hover:text-gold transition-colors disabled:opacity-30"
+                title="Summarize with AI"
+              >
+                <Sparkles className={cn("w-4 h-4", isSummarizing && "animate-pulse")} />
+              </button>
+              {isAdmin && (
+                <button onClick={onDelete} className="text-slate-500 hover:text-red-400 transition-colors">
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              )}
+              <a
+                href={material.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sky hover:text-white transition-colors"
+              >
+                {isExternal ? <ExternalLink className="w-4 h-4" /> : <Download className="w-4 h-4" />}
+              </a>
+            </div>
           </div>
-        )}
+          <p className="text-slate-400 text-xs mt-1 line-clamp-2">{material.description}</p>
+        </div>
       </div>
+
+      <AnimatePresence>
+        {summary && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="bg-sky/5 border border-sky/10 rounded-lg p-3 text-xs text-sky/90"
+          >
+            <div className="flex items-center gap-1 mb-2 font-bold uppercase tracking-widest text-[10px]">
+              <Sparkles className="w-3 h-3" />
+              AI Summary
+            </div>
+            <div className="whitespace-pre-line leading-relaxed">
+              {summary}
+            </div>
+            <button
+              onClick={() => setSummary(null)}
+              className="mt-2 text-[10px] underline opacity-50 hover:opacity-100"
+            >
+              Dismiss
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {material.type === 'audio' && (
+        <audio controls className="w-full h-8 opacity-60 hover:opacity-100 transition-opacity">
+          <source src={material.url} type="audio/mpeg" />
+        </audio>
+      )}
+
+      {material.type === 'video' && isExternal && (
+        <div className="aspect-video rounded-lg overflow-hidden bg-black/20">
+          <iframe
+            src={material.url.replace('watch?v=', 'embed/')}
+            className="w-full h-full border-0"
+            allowFullScreen
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -379,7 +435,7 @@ const MaterialCard: React.FC<{ material: Material, isAdmin: boolean, onDelete: (
 
 function TabButton({ active, onClick, icon, label }: { active: boolean, onClick: () => void, icon: React.ReactNode, label: string }) {
   return (
-    <button 
+    <button
       onClick={onClick}
       className={cn(
         "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all",
@@ -395,14 +451,14 @@ function TabButton({ active, onClick, icon, label }: { active: boolean, onClick:
 function Modal({ children, onClose }: { children: React.ReactNode, onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
         className="absolute inset-0 bg-navy/80 backdrop-blur-sm"
       />
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -437,9 +493,7 @@ function LoginForm({ onSubmit }: { onSubmit: (e: React.FormEvent<HTMLFormElement
           Login to Dashboard
         </button>
       </form>
-      <p className="text-center text-xs text-slate-500">
-        Demo credentials: admin / admin123
-      </p>
+
     </div>
   );
 }
@@ -447,6 +501,26 @@ function LoginForm({ onSubmit }: { onSubmit: (e: React.FormEvent<HTMLFormElement
 function AdminPanel({ token, courses, onRefresh }: { token: string, courses: Course[], onRefresh: () => void }) {
   const [view, setView] = useState<'courses' | 'materials'>('courses');
   const [loading, setLoading] = useState(false);
+  const [suggestingTitle, setSuggestingTitle] = useState(false);
+  const [formData, setFormData] = useState({ title: '', description: '' });
+
+  const handleSuggestTitle = async () => {
+    if (!formData.description) return alert('Enter description first');
+    setSuggestingTitle(true);
+    try {
+      const res = await fetch('/api/ai/suggest-title', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ description: formData.description })
+      });
+      const data = await res.json();
+      if (data.title) setFormData(prev => ({ ...prev, title: data.title }));
+    } catch (e) {
+      alert('AI Title Suggestion failed');
+    } finally {
+      setSuggestingTitle(false);
+    }
+  };
 
   const handleAddCourse = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -456,7 +530,7 @@ function AdminPanel({ token, courses, onRefresh }: { token: string, courses: Cou
 
     const res = await fetch('/api/courses', {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
@@ -473,18 +547,21 @@ function AdminPanel({ token, courses, onRefresh }: { token: string, courses: Cou
   const handleAddMaterial = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    const formData = new FormData(e.currentTarget);
+    const form = new FormData(e.currentTarget);
+    form.set('title', formData.title); // Ensure title from state is used
+    form.set('description', formData.description); // Ensure description from state is used
 
     const res = await fetch('/api/materials', {
       method: 'POST',
-      headers: { 
+      headers: {
         'Authorization': `Bearer ${token}`
       },
-      body: formData,
+      body: form,
     });
 
     if (res.ok) {
       onRefresh();
+      setFormData({ title: '', description: '' });
       (e.target as HTMLFormElement).reset();
       alert('Material uploaded successfully!');
     }
@@ -494,13 +571,13 @@ function AdminPanel({ token, courses, onRefresh }: { token: string, courses: Cou
   return (
     <div className="space-y-8">
       <div className="flex gap-4 border-b border-white/10 pb-4">
-        <button 
+        <button
           onClick={() => setView('courses')}
           className={cn("pb-2 px-4 transition-all", view === 'courses' ? "text-sky border-b-2 border-sky" : "text-slate-400")}
         >
           Manage Courses
         </button>
-        <button 
+        <button
           onClick={() => setView('materials')}
           className={cn("pb-2 px-4 transition-all", view === 'materials' ? "text-sky border-b-2 border-sky" : "text-slate-400")}
         >
@@ -530,10 +607,10 @@ function AdminPanel({ token, courses, onRefresh }: { token: string, courses: Cou
                   <span className="text-gold font-mono text-xs mr-2">{c.code}</span>
                   <span className="text-white text-sm">{c.name}</span>
                 </div>
-                <button 
+                <button
                   onClick={async () => {
                     if (confirm('Delete course and all its materials?')) {
-                      await fetch(`/api/courses/${c.id}`, { 
+                      await fetch(`/api/courses/${c.id}`, {
                         method: 'DELETE',
                         headers: { 'Authorization': `Bearer ${token}` }
                       });
@@ -551,6 +628,37 @@ function AdminPanel({ token, courses, onRefresh }: { token: string, courses: Cou
       ) : (
         <form onSubmit={handleAddMaterial} className="space-y-4 glass p-6 rounded-2xl">
           <h4 className="text-white font-bold">Upload New Material</h4>
+
+          <div className="space-y-4">
+            <textarea
+              name="description"
+              placeholder="Description (Enter details first for AI Title Suggestion)"
+              className="input-field w-full h-24"
+              value={formData.description}
+              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+            />
+
+            <div className="relative">
+              <input
+                name="title"
+                placeholder="Material Title"
+                required
+                className="input-field w-full pr-10"
+                value={formData.title}
+                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+              />
+              <button
+                type="button"
+                onClick={handleSuggestTitle}
+                disabled={suggestingTitle || !formData.description}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gold hover:text-gold/80 disabled:opacity-30"
+                title="Suggest Title with AI"
+              >
+                <Sparkles className={cn("w-5 h-5", suggestingTitle && "animate-spin")} />
+              </button>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <select name="course_id" required className="input-field bg-navy">
               <option value="">Select Course</option>
@@ -564,16 +672,13 @@ function AdminPanel({ token, courses, onRefresh }: { token: string, courses: Cou
               <option value="video">Video Link</option>
             </select>
           </div>
-          <input name="title" placeholder="Material Title" required className="input-field w-full" />
-          
+
           <div className="space-y-2">
             <label className="text-xs text-slate-400">File Upload (PDF/Audio) OR Video URL</label>
             <input name="file" type="file" className="input-field w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sky/10 file:text-sky hover:file:bg-sky/20" />
             <input name="url" placeholder="External URL (YouTube/Vimeo)" className="input-field w-full" />
           </div>
 
-          <textarea name="description" placeholder="Description" className="input-field w-full h-24" />
-          
           <button disabled={loading} className="btn-primary w-full py-3">
             {loading ? 'Uploading...' : 'Upload Resource'}
           </button>
