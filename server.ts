@@ -25,6 +25,16 @@ const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || "irexihub-secret-key";
 
+// Seed Educator Credentials
+async function seedEducator() {
+  const passwordHash = bcrypt.hashSync("irewole12345678", 10);
+  const { error } = await supabase
+    .from("academy_users")
+    .upsert({ username: "irewole", password: passwordHash }, { onConflict: "username" });
+  if (error) console.error("Error seeding educator:", error.message);
+}
+seedEducator();
+
 app.use(express.json());
 
 // Multer setup for file uploads (Memory storage for Supabase)
