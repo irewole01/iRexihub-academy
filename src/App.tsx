@@ -142,10 +142,52 @@ export default function App() {
             )}
           </div>
 
-          <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          <button className="md:hidden text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
             {isMenuOpen ? <X /> : <Menu />}
           </button>
         </div>
+
+        {/* Mobile Menu Dropdown */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden border-t border-white/10 mt-4 pt-4 pb-2 space-y-4"
+            >
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Search resources..."
+                  className="input-field pl-10 w-full text-sm"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              {isAdmin ? (
+                <div className="flex flex-col gap-2">
+                  <button onClick={() => { setShowLogin(true); setIsMenuOpen(false); }} className="flex items-center gap-2 p-2 rounded-lg bg-sky/10 text-sky w-full">
+                    <LayoutDashboard className="w-4 h-4" />
+                    Dashboard
+                  </button>
+                  <button onClick={() => { handleLogout(); setIsMenuOpen(false); }} className="flex items-center gap-2 p-2 rounded-lg bg-red-400/10 text-red-400 w-full">
+                    <LogOut className="w-4 h-4" />
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => { setShowLogin(true); setIsMenuOpen(false); }}
+                  className="w-full btn-primary text-sm"
+                >
+                  Educator Login
+                </button>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       <main className="flex-1 max-w-7xl mx-auto w-full p-6">
@@ -462,7 +504,7 @@ function Modal({ children, onClose }: { children: React.ReactNode, onClose: () =
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="relative w-full max-w-2xl glass rounded-3xl p-8 shadow-2xl overflow-y-auto max-h-[90vh]"
+        className="relative w-full max-w-2xl glass rounded-3xl p-6 md:p-8 shadow-2xl overflow-y-auto max-h-[90vh]"
       >
         <button onClick={onClose} className="absolute top-6 right-6 text-slate-400 hover:text-white">
           <X className="w-6 h-6" />
@@ -570,16 +612,16 @@ function AdminPanel({ token, courses, onRefresh }: { token: string, courses: Cou
 
   return (
     <div className="space-y-8">
-      <div className="flex gap-4 border-b border-white/10 pb-4">
+      <div className="flex flex-wrap gap-2 md:gap-4 border-b border-white/10 pb-4">
         <button
           onClick={() => setView('courses')}
-          className={cn("pb-2 px-4 transition-all", view === 'courses' ? "text-sky border-b-2 border-sky" : "text-slate-400")}
+          className={cn("pb-2 px-2 md:px-4 text-xs md:text-sm font-medium transition-all whitespace-nowrap", view === 'courses' ? "text-sky border-b-2 border-sky" : "text-slate-400")}
         >
           Manage Courses
         </button>
         <button
           onClick={() => setView('materials')}
-          className={cn("pb-2 px-4 transition-all", view === 'materials' ? "text-sky border-b-2 border-sky" : "text-slate-400")}
+          className={cn("pb-2 px-2 md:px-4 text-xs md:text-sm font-medium transition-all whitespace-nowrap", view === 'materials' ? "text-sky border-b-2 border-sky" : "text-slate-400")}
         >
           Upload Materials
         </button>
@@ -589,7 +631,7 @@ function AdminPanel({ token, courses, onRefresh }: { token: string, courses: Cou
         <div className="space-y-6">
           <form onSubmit={handleAddCourse} className="space-y-4 glass p-6 rounded-2xl">
             <h4 className="text-white font-bold">Add New Course</h4>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input name="code" placeholder="Course Code (e.g. CS101)" required className="input-field" />
               <input name="name" placeholder="Course Name" required className="input-field" />
             </div>
