@@ -525,7 +525,7 @@ function LoginForm({ onSubmit }: { onSubmit: (e: React.FormEvent<HTMLFormElement
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="space-y-2">
           <label className="text-sm font-medium text-slate-300">Username</label>
-          <input name="username" type="text" required className="input-field w-full" placeholder="admin" />
+          <input name="username" type="text" required className="input-field w-full" placeholder="irewole" />
         </div>
         <div className="space-y-2">
           <label className="text-sm font-medium text-slate-300">Password</label>
